@@ -1,0 +1,63 @@
+@host = http://localhost:5241
+
+### Status da API e banco
+GET {{host}}/api/status
+
+### Evento do sistema de vendas
+POST {{host}}/api/events
+Content-Type: application/json
+
+{
+  "systemName": "SistemaVendas",
+  "eventId": "VENDA-1001",
+  "recordId": "PED-1001",
+  "eventType": "PedidoAtualizado",
+  "occurredAt": "2026-11-19T10:00:00Z",
+  "data": { "orderId": 1001, "amount": 250.00, "quantity": 2 }
+}
+
+### Mesmo pedido com divergência financeira e de quantidade
+POST {{host}}/api/events
+Content-Type: application/json
+
+{
+  "systemName": "SistemaEstoque",
+  "eventId": "EST-1001",
+  "recordId": "PED-1001",
+  "eventType": "PedidoAtualizado",
+  "occurredAt": "2026-11-19T10:01:00Z",
+  "data": { "orderId": 1001, "amount": 300.00, "quantity": 3 }
+}
+
+### Consultar eventos (paginado)
+GET {{host}}/api/events?page=1&pageSize=50
+
+### Consultar um evento (substitua o GUID)
+GET {{host}}/api/events/00000000-0000-0000-0000-000000000000
+
+### Consultar anomalias sem alterar o banco
+GET {{host}}/api/events/anomalies
+
+### Sistemas observados e sistemas esperados configurados
+GET {{host}}/api/systems
+
+### Alertas pendentes
+GET {{host}}/api/alerts?resolved=false
+
+### Alertas priorizados
+GET {{host}}/api/alerts/prioritized
+
+### Dashboard
+GET {{host}}/api/dashboard/summary
+
+### Recorrências
+GET {{host}}/api/alerts/recurrences
+
+### Saúde geral dos sistemas
+GET {{host}}/api/systems/health
+
+### Desempenho por sistema
+GET {{host}}/api/systems/performance
+
+# Para resolver, substitua {ALERT_ID} pelo ID retornado em /api/alerts
+### PATCH {{host}}/api/alerts/00000000-0000-0000-0000-000000000000/resolve
